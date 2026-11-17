@@ -1,7 +1,6 @@
 """八年级: assign printed page numbers to questions, then locate figure boxes on pages."""
 import re, sys, os, json
-sys.path.insert(0, os.path.dirname(__file__))
-import pdfxml
+from . import pdfxml
 
 PDF = None
 BOOK = None

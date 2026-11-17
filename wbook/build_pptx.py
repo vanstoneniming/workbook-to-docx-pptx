@@ -8,8 +8,7 @@ from pptx.enum.shapes import MSO_SHAPE
 from pptx.oxml.ns import qn, nsdecls
 from pptx.oxml import parse_xml
 from PIL import Image
-sys.path.insert(0, os.path.dirname(__file__))
-import layout
+from . import layout
 
 OUT = None
 IMG_PPT = None
@@ -119,6 +118,26 @@ def cover(prs, title, subtitle, note):
     textbox(s, 1.25, 1.95, 10.6, 1.0, title, 34, WHITE, True)
     textbox(s, 1.28, 3.05, 10.6, 0.7, subtitle, 20, RGBColor(0xE8, 0xC8, 0x8A))
     textbox(s, 1.28, 4.2, 10.6, 0.9, note, 13, RGBColor(0xA8, 0xB4, 0xC4))
+
+
+def brand_slide(prs, brand):
+    """封底：公众号名片。"""
+    if not brand:
+        return
+    s = blank(prs)
+    rect(s, 0, 0, 13.333, 7.5, NAVY)
+    rect(s, 0.9, 2.15, 0.09, 1.9, ACCENT)
+    textbox(s, 1.25, 2.05, 8.4, 0.9, brand.get("name", ""), 36, WHITE, True)
+    if brand.get("line1"):
+        textbox(s, 1.28, 3.0, 8.4, 0.5, brand["line1"], 15, RGBColor(0xE8, 0xC8, 0x8A))
+    if brand.get("line2"):
+        textbox(s, 1.28, 3.55, 8.4, 0.45, brand["line2"], 14, RGBColor(0xA8, 0xB4, 0xC4))
+    if brand.get("short"):
+        textbox(s, 1.28, 4.35, 7.9, 1.6, brand["short"], 13, RGBColor(0xC9, 0xD2, 0xDE), spacing=1.5)
+    qr = brand.get("qrcode")
+    if qr and os.path.exists(qr):
+        s.shapes.add_picture(qr, Inches(9.9), Inches(3.05), height=Inches(2.2))
+        textbox(s, 9.9, 5.35, 2.2, 0.4, "扫码关注", 12, RGBColor(0xA8, 0xB4, 0xC4), align=PP_ALIGN.CENTER)
 
 
 def chapter(prs, idx, title, count):
@@ -335,7 +354,7 @@ def net_slides(prs, files, sec_name, ch_title):
         s.shapes.add_picture(grp[0], Inches(0.95 + (avail_w - w_in) / 2), Inches(y), width=Inches(w_in))
 
 
-def run(model_path, out_path, title, subtitle, note, img_dir):
+def run(model_path, out_path, title, subtitle, note, img_dir, brand=None):
     global OUT, IMG_PPT
     OUT = os.path.dirname(model_path)
     IMG_PPT = img_dir
@@ -367,5 +386,6 @@ def run(model_path, out_path, title, subtitle, note, img_dir):
                         if comp:
                             a = {"text": "\n".join(comp)}
                     answer_slides(prs, q, a, head, f"{c['title']}　{sec['title']}")
+    brand_slide(prs, brand)
     prs.save(out_path)
     return out_path

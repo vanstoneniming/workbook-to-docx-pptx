@@ -1,6 +1,5 @@
 """八年级 book: MinerU markdown -> structure; page numbers by anchored estimation."""
 import re, sys, os, json
-sys.path.insert(0, os.path.dirname(__file__))
 
 PDF = None
 MD = None

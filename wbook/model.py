@@ -1,7 +1,6 @@
 """Normalise both books into one model and crop all figures."""
 import os, json, re, sys
-sys.path.insert(0, os.path.dirname(__file__))
-import pdfxml, answers
+from . import pdfxml, answers
 
 OUT = None
 FIG = None

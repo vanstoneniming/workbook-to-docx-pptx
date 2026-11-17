@@ -7,7 +7,7 @@ from docx.enum.section import WD_SECTION
 from docx.oxml.ns import qn
 from docx.oxml import OxmlElement
 from PIL import Image
-import layout
+from . import layout
 
 OUT = None
 BODY_FONT = "宋体"
@@ -90,6 +90,32 @@ def cover(doc, title, subtitle, lines):
               color=RGBColor(0x1F, 0x4E, 0x79), space_after=24)
     for ln in lines:
         para(doc, ln, size=10.5, align=WD_ALIGN_PARAGRAPH.CENTER, color=GRAY, space_after=4)
+
+
+def brand_block(doc, brand):
+    """封面底部：公众号二维码 + 两行口号。"""
+    if not brand:
+        return
+    qr = brand.get("qrcode")
+    if qr and not os.path.exists(qr):
+        qr = None
+    for _ in range(2):
+        para(doc, "", space_after=0)
+    if qr:
+        p = doc.add_paragraph()
+        p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        p.paragraph_format.space_before = Pt(10)
+        p.paragraph_format.space_after = Pt(6)
+        p.add_run().add_picture(qr, width=Cm(2.8))
+    if brand.get("line1"):
+        para(doc, brand["line1"], size=9.5, align=WD_ALIGN_PARAGRAPH.CENTER,
+             color=RGBColor(0x59, 0x59, 0x59), space_after=2)
+    if brand.get("line2"):
+        para(doc, brand["line2"], size=9.5, bold=True, align=WD_ALIGN_PARAGRAPH.CENTER,
+             color=RGBColor(0x1F, 0x4E, 0x79), space_after=2)
+    if brand.get("short"):
+        para(doc, brand["short"], size=8.5, align=WD_ALIGN_PARAGRAPH.CENTER,
+             color=GRAY, space_after=0)
 
 
 def chapter_head(doc, title):
@@ -250,7 +276,7 @@ def answer_block(doc, ans, groups):
                 para(doc, ln, size=10, indent=0.5, space_after=1, line=1.3)
 
 
-def build(book, out_path, title, subtitle, lines):
+def build(book, out_path, title, subtitle, lines, brand=None):
     doc = Document()
     style = doc.styles["Normal"]
     style.font.name = LATIN
@@ -258,6 +284,7 @@ def build(book, out_path, title, subtitle, lines):
     style.element.rPr.rFonts.set(qn("w:eastAsia"), BODY_FONT)
     setup_page(doc, title)
     cover(doc, title, subtitle, lines)
+    brand_block(doc, brand)
     for c in book:
         chapter_head(doc, c["title"])
         for s in c["sections"]:
@@ -277,6 +304,6 @@ def build(book, out_path, title, subtitle, lines):
     return out_path
 
 
-def run(model_path, out_path, title, subtitle, note):
+def run(model_path, out_path, title, subtitle, note, brand=None):
     book = json.load(open(model_path, encoding="utf-8"))
-    return build(book, out_path, title, subtitle, [note, "据原书整理　页码对应原书印刷页码"])
+    return build(book, out_path, title, subtitle, [note, "据原书整理　页码对应原书印刷页码"], brand)

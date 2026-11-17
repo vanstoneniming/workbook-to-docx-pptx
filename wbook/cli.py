@@ -15,6 +15,9 @@ def load_config(path):
     out = cfg.get("out", "out")
     cfg["out"] = out if os.path.isabs(out) else os.path.join(base, out)
     os.makedirs(cfg["out"], exist_ok=True)
+    brand = cfg.get("brand")
+    if brand and brand.get("qrcode") and not os.path.isabs(brand["qrcode"]):
+        brand["qrcode"] = os.path.join(base, brand["qrcode"])
     for b in cfg["books"]:
         for k in ("pdf", "md", "answers_md"):
             if b.get(k) and not os.path.isabs(b[k]):
@@ -65,12 +68,13 @@ def main():
         model_path = os.path.join(out, f"model{tag}.json")
         if args.step in ("docx", "all"):
             p = build_docx.run(model_path, os.path.join(out, f"{b['title']}.docx"),
-                               b["title"], b.get("subtitle", "试题与答案"), b.get("note", ""))
+                               b["title"], b.get("subtitle", "试题与答案"), b.get("note", ""),
+                               cfg.get("brand"))
             print("[docx]", p)
         if args.step in ("pptx", "all"):
             p = build_pptx.run(model_path, os.path.join(out, f"{b['title']}_讲评.pptx"),
                                b["title"], b.get("subtitle_ppt", "试题讲评 · 一题一页"),
-                               b.get("note", ""), os.path.join(out, "pptimg"))
+                               b.get("note", ""), os.path.join(out, "pptimg"), cfg.get("brand"))
             print("[pptx]", p)
 
 

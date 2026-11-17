@@ -1,7 +1,6 @@
 """七年级 book: build structured content from the PDF text layer (no OCR)."""
 import re, sys, os, json
-sys.path.insert(0, os.path.dirname(__file__))
-import pdfxml, columns
+from . import pdfxml, columns
 
 PDF = None
 PAGE_OFFSET = 4
