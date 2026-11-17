@@ -1,0 +1,22 @@
+# 输出与中间产物
+out/
+*.docx
+*.pptx
+*.pdf
+!examples/*.pdf
+
+# 图片缓存
+fig/
+pptimg/
+*.png
+*.jpg
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# 系统
+.DS_Store
+~$*
