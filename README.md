@@ -1,6 +1,6 @@
 # workbook-to-docx-pptx
 
-简体中文 ｜ [English](#english)
+简体中文 ｜ [English](README_EN.md)
 
 把中文教辅（习题册、目标检测、单元卷）转成两份可直接用的成品：
 
@@ -120,9 +120,9 @@ wbook/
 
 > 关注 「智教云栈」，一线教师 + AI 教育工具，不吹「一键」，只讲「怎么改」。
 >
-> 🔧 智教云栈 ｜ 智学题库 ｜ 云栈课堂
-
-备课之余，遇到试卷下载、题目找寻、组卷，或视频剪辑、格式转换、课件排版等小烦恼，不必独自费心。公众号留言，愿以绵薄之力，伴您从容前行。
+> 🔧 [智教云栈](https://www.zhijiaoyunzhan.com) ｜ [智学题库](https://www.ti.video) ｜ [云栈课堂](https://yun.tihe.cc)
+>
+> 备课之余，遇到试卷下载、题目找寻、组卷，或视频剪辑、格式转换、课件排版等小烦恼，不必独自费心。公众号留言，愿以绵薄之力，伴您从容前行。
 
 <p align="center">
   <img src="images/qrcode.png" width="220" alt="智教云栈 公众号二维码">
@@ -130,71 +130,6 @@ wbook/
 
 这个工具就是备课时攒出来的：两册《学习目标与检测》一百六十多页，一题一页地对下来，顺手把流程写成了代码。用法上有问题、或者想改成你们学校自己的版式，公众号后台留言就行。
 
-站点：[www.zhijiaoyunzhan.com](https://www.zhijiaoyunzhan.com)　·　[www.ti.video](https://www.ti.video)　·　[yun.tihe.cc](https://yun.tihe.cc)　·　邮箱：support@aiquickspot.com
-
 ## 版权
 
 代码 MIT。**教材内容（PDF、markdown、裁出来的图、生成的 docx/pptx）版权归原出版方，不要提交到本仓库，也不要分发。**
-
----
-
-## English
-
-**Turn a Chinese workbook into an editable Word file and a 16:9 review deck.**
-
-Built for the *学习目标与检测* series (Chinese middle-school geography / physics workbooks), and general enough for most workbook layouts: chapters and sections, multiple-choice questions with A–D options, fill-in-the-blank items, numbered sub-questions, figures and tables, plus a separate answer key.
-
-**What you get**
-
-- **Word** — A4, chapter/section layout, figures and tables preserved, a small page tag (`原书 P012`) beside every question, answers collected at the end of each section.
-- **PPT** — 16:9, one question per slide followed by its answer slide, a knowledge-map slide at the start of each section, header showing the original page and question number.
-
-**Why not OCR**
-
-Transcribing a book page by page takes hours and has to be redone after every layout change. This tool takes a faster route:
-
-| Input | Approach | Time for an 80–100 page book |
-|---|---|---|
-| **MinerU markdown export** | text comes from the markdown; the PDF is only used to crop figures and locate pages | ~2 min |
-| **PDF with a text layer** | `pdftohtml -xml` yields lines and coordinates, no OCR | ~2 min |
-| Image-only PDF | falls back to page-by-page transcription | 2–3 h |
-
-**Requirements**
-
-```bash
-python3 -m venv .venv && source .venv/bin/activate
-pip install python-docx python-pptx pillow
-# poppler-utils provides pdftohtml / pdftoppm / pdfinfo
-```
-
-**Usage**
-
-```bash
-cp examples/config.json my.json      # edit paths, page offset, table of contents
-python3 -m wbook.cli --config my.json
-```
-
-Outputs land in `out/`: `<book>.docx` and `<book>_review.pptx`.
-
-**Layout rules it enforces**
-
-- Answer brackets `（　　）` never break across lines.
-- A/B/C/D options always start a new line with `A` at the margin — four per row when very short, two when medium, one otherwise; ①②③④ items follow the same rule.
-- Source material above a question is set in KaiTi; question text in SimSun (Word) or Microsoft YaHei (PPT).
-- Two-column "observe / think" cards are cropped as a single image instead of being linearised.
-- LaTeX leftovers from the markdown (`$30^{\circ}\mathrm{N}$`) are normalised to `30°N`, `20℃`, `4~5`.
-
-**Known limitations**
-
-- For image-only PDFs, page numbers are estimated from the table of contents and the grey section labels, so a few may be off by one page.
-- Two-column option blocks can occasionally pull a neighbouring item into an option.
-- No Chinese OCR — run MinerU (or similar) first.
-
-**License**
-
-Code is MIT. Book content (PDFs, markdown, cropped figures, generated documents) remains the copyright of its publisher — please do not commit or redistribute it.
-
-**Contact**
-
-Questions, bug reports, or a layout you would like supported: **support@aiquickspot.com**
-
