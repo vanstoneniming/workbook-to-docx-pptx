@@ -130,6 +130,8 @@ wbook/
 
 这个工具就是备课时攒出来的：两册《学习目标与检测》一百六十多页，一题一页地对下来，顺手把流程写成了代码。用法上有问题、或者想改成你们学校自己的版式，公众号后台留言就行。
 
+站点：[www.zhijiaoyunzhan.com](https://www.zhijiaoyunzhan.com)　·　[www.ti.video](https://www.ti.video)　·　[yun.tihe.cc](https://yun.tihe.cc)　·　邮箱：support@aiquickspot.com
+
 ## 版权
 
 代码 MIT。**教材内容（PDF、markdown、裁出来的图、生成的 docx/pptx）版权归原出版方，不要提交到本仓库，也不要分发。**

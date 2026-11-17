@@ -134,6 +134,25 @@ def brand_slide(prs, brand):
         textbox(s, 1.28, 3.55, 8.4, 0.45, brand["line2"], 14, RGBColor(0xA8, 0xB4, 0xC4))
     if brand.get("short"):
         textbox(s, 1.28, 4.35, 7.9, 1.6, brand["short"], 13, RGBColor(0xC9, 0xD2, 0xDE), spacing=1.5)
+    links = brand.get("links") or []
+    if links:
+        rect(s, 0, 6.5, 13.333, 1.0, LIGHT)
+        tb = s.shapes.add_textbox(Inches(1.1), Inches(6.82), Inches(11.2), Inches(0.4))
+        tf = tb.text_frame
+        tf.margin_left = 0; tf.margin_right = 0; tf.margin_top = 0; tf.margin_bottom = 0
+        p = tf.paragraphs[0]
+        p.alignment = PP_ALIGN.CENTER
+        for i, ln in enumerate(links):
+            if i:
+                r0 = p.add_run(); r0.text = "　·　"
+                r0.font.size = Pt(12); r0.font.name = FONT
+                r0.font.color.rgb = RGBColor(0x9A, 0xA3, 0xAE)
+                set_ea(r0, FONT)
+            r = p.add_run(); r.text = ln["text"]
+            r.font.size = Pt(13); r.font.name = FONT
+            r.font.color.rgb = ACCENT2
+            set_ea(r, FONT)
+            r.hyperlink.address = ln["url"]
     qr = brand.get("qrcode")
     if qr and os.path.exists(qr):
         s.shapes.add_picture(qr, Inches(9.9), Inches(3.05), height=Inches(2.2))

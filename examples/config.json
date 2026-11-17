@@ -80,6 +80,20 @@
     "line2": "智教云栈 ｜ 智学题库 ｜ 云栈课堂",
     "blurb": "备课之余，遇到试卷下载、题目找寻、组卷，或视频剪辑、格式转换、课件排版等小烦恼，不必独自费心。公众号留言，愿以绵薄之力，伴您从容前行。",
     "qrcode": "images/qrcode.png",
-    "short": "备课之余，遇到试卷下载、组卷、视频剪辑、课件排版等小烦恼，公众号留言，愿伴您从容前行。"
+    "short": "备课之余，遇到试卷下载、组卷、视频剪辑、课件排版等小烦恼，公众号留言，愿伴您从容前行。",
+    "links": [
+      {
+        "text": "www.zhijiaoyunzhan.com",
+        "url": "https://www.zhijiaoyunzhan.com"
+      },
+      {
+        "text": "www.ti.video",
+        "url": "https://www.ti.video"
+      },
+      {
+        "text": "yun.tihe.cc",
+        "url": "https://yun.tihe.cc"
+      }
+    ]
   }
 }

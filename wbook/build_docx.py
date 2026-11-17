@@ -92,6 +92,31 @@ def cover(doc, title, subtitle, lines):
         para(doc, ln, size=10.5, align=WD_ALIGN_PARAGRAPH.CENTER, color=GRAY, space_after=4)
 
 
+def add_hyperlink(paragraph, url, text, size=9, color=RGBColor(0x1F, 0x4E, 0x79)):
+    from docx.opc.constants import RELATIONSHIP_TYPE as RT
+    part = paragraph.part
+    r_id = part.relate_to(url, RT.HYPERLINK, is_external=True)
+    hl = OxmlElement("w:hyperlink")
+    hl.set(qn("r:id"), r_id)
+    run = OxmlElement("w:r")
+    rPr = OxmlElement("w:rPr")
+    rFonts = OxmlElement("w:rFonts")
+    rFonts.set(qn("w:ascii"), LATIN); rFonts.set(qn("w:hAnsi"), LATIN)
+    rFonts.set(qn("w:eastAsia"), BODY_FONT)
+    rPr.append(rFonts)
+    c = OxmlElement("w:color"); c.set(qn("w:val"), "%02X%02X%02X" % (color[0], color[1], color[2]))
+    rPr.append(c)
+    u = OxmlElement("w:u"); u.set(qn("w:val"), "single")
+    rPr.append(u)
+    sz = OxmlElement("w:sz"); sz.set(qn("w:val"), str(int(size * 2)))
+    rPr.append(sz)
+    run.append(rPr)
+    t = OxmlElement("w:t"); t.set(qn("xml:space"), "preserve"); t.text = text
+    run.append(t)
+    hl.append(run)
+    paragraph._p.append(hl)
+
+
 def brand_block(doc, brand):
     """封面底部：公众号二维码 + 两行口号。"""
     if not brand:
@@ -115,7 +140,17 @@ def brand_block(doc, brand):
              color=RGBColor(0x1F, 0x4E, 0x79), space_after=2)
     if brand.get("short"):
         para(doc, brand["short"], size=8.5, align=WD_ALIGN_PARAGRAPH.CENTER,
-             color=GRAY, space_after=0)
+             color=GRAY, space_after=2)
+    links = brand.get("links") or []
+    if links:
+        p = doc.add_paragraph()
+        p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        p.paragraph_format.space_before = Pt(7)
+        p.paragraph_format.space_after = Pt(0)
+        for i, ln in enumerate(links):
+            if i:
+                set_run_font(p.add_run("　·　"), BODY_FONT, 9, color=GRAY)
+            add_hyperlink(p, ln["url"], ln["text"], 9)
 
 
 def chapter_head(doc, title):
