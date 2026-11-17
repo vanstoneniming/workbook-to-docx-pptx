@@ -1,5 +1,7 @@
 # workbook-to-docx-pptx
 
+简体中文 ｜ [English](#english)
+
 把中文教辅（习题册、目标检测、单元卷）转成两份可直接用的成品：
 
 - **Word**：按章 / 节排版的试题册，保留插图、表格、填空下划线，每题右侧标原书页码，**每节末集中给参考答案**。
@@ -131,3 +133,66 @@ wbook/
 ## 版权
 
 代码 MIT。**教材内容（PDF、markdown、裁出来的图、生成的 docx/pptx）版权归原出版方，不要提交到本仓库，也不要分发。**
+
+---
+
+## English
+
+**Turn a Chinese workbook into an editable Word file and a 16:9 review deck.**
+
+Built for the *学习目标与检测* series (Chinese middle-school geography / physics workbooks), and general enough for most workbook layouts: chapters and sections, multiple-choice questions with A–D options, fill-in-the-blank items, numbered sub-questions, figures and tables, plus a separate answer key.
+
+**What you get**
+
+- **Word** — A4, chapter/section layout, figures and tables preserved, a small page tag (`原书 P012`) beside every question, answers collected at the end of each section.
+- **PPT** — 16:9, one question per slide followed by its answer slide, a knowledge-map slide at the start of each section, header showing the original page and question number.
+
+**Why not OCR**
+
+Transcribing a book page by page takes hours and has to be redone after every layout change. This tool takes a faster route:
+
+| Input | Approach | Time for an 80–100 page book |
+|---|---|---|
+| **MinerU markdown export** | text comes from the markdown; the PDF is only used to crop figures and locate pages | ~2 min |
+| **PDF with a text layer** | `pdftohtml -xml` yields lines and coordinates, no OCR | ~2 min |
+| Image-only PDF | falls back to page-by-page transcription | 2–3 h |
+
+**Requirements**
+
+```bash
+python3 -m venv .venv && source .venv/bin/activate
+pip install python-docx python-pptx pillow
+# poppler-utils provides pdftohtml / pdftoppm / pdfinfo
+```
+
+**Usage**
+
+```bash
+cp examples/config.json my.json      # edit paths, page offset, table of contents
+python3 -m wbook.cli --config my.json
+```
+
+Outputs land in `out/`: `<book>.docx` and `<book>_review.pptx`.
+
+**Layout rules it enforces**
+
+- Answer brackets `（　　）` never break across lines.
+- A/B/C/D options always start a new line with `A` at the margin — four per row when very short, two when medium, one otherwise; ①②③④ items follow the same rule.
+- Source material above a question is set in KaiTi; question text in SimSun (Word) or Microsoft YaHei (PPT).
+- Two-column "observe / think" cards are cropped as a single image instead of being linearised.
+- LaTeX leftovers from the markdown (`$30^{\circ}\mathrm{N}$`) are normalised to `30°N`, `20℃`, `4~5`.
+
+**Known limitations**
+
+- For image-only PDFs, page numbers are estimated from the table of contents and the grey section labels, so a few may be off by one page.
+- Two-column option blocks can occasionally pull a neighbouring item into an option.
+- No Chinese OCR — run MinerU (or similar) first.
+
+**License**
+
+Code is MIT. Book content (PDFs, markdown, cropped figures, generated documents) remains the copyright of its publisher — please do not commit or redistribute it.
+
+**Contact**
+
+Questions, bug reports, or a layout you would like supported: **support@aiquickspot.com**
+
